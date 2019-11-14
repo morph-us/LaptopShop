@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		 {% load staticfiles %}
+
+		<title>Electronics shop</title>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+ 		<!-- Google font -->
+ 		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+ 		<!-- Bootstrap -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+
+ 		<!-- Slick -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'css/slick.css'  %}" />
+ 		<link type="text/css" rel="stylesheet" href="{% static 'css/slick-theme.css' %}"/>
+
+ 		<!-- nouislider -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'css/nouislider.min.css' %}"/>
+
+ 		<!-- Font Awesome Icon -->
+ 		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+
+ 		<!-- Custom stlylesheet -->
+ 		<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    </head>
+	<body>
+			<!-- MAIN HEADER -->
+			<div id="header">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<!-- LOGO -->
+						<div class="col-md-3">
+							<div class="header-logo">
+								<a href="#" class="logo">
+								<td><img src="{% static 'img/logo.png' %}" alt="logo" vspace="10" hspace="70" height="50" width="160"></a></td>
+								</a>
+							</div>
+						</div>
+						<!-- /LOGO -->
+
+						<!-- SEARCH BAR -->
+						<div class="col-md-6">
+							<div class="header-search">
+								<form action="../search">
+									<select class="input-select" name="search_by">
+										<option selected="selected" value="1">Model Name</option>
+										<option value="2">Brand Name</option>
+										<option value="3">Quantity</option>
+									</select>
+									<input class="input"  name="value" placeholder="Search here">
+									<button class="search-btn">Search</button>
+								</form>
+							</div>
+						</div>
+						<!-- /SEARCH BAR -->
+
+						<!-- ACCOUNT -->
+						<div class="col-md-3 clearfix">
+							<div class="header-ctn">
+
+
+								
+
+								<!-- Menu Toogle -->
+								<div class="menu-toggle">
+									<a href="#">
+										<i class="fa fa-bars"></i>
+										<span>Menu</span>
+									</a>
+								</div>
+								<!-- /Menu Toogle -->
+							</div>
+						</div>
+						<!-- /ACCOUNT -->
+					</div>
+					<!-- row -->
+				</div>
+				<!-- container -->
+			</div>
+			<!-- /MAIN HEADER -->
+		</header>
+		<!-- /HEADER -->
+
+		<!-- NAVIGATION -->
+		<nav id="navigation">
+			<!-- container -->
+			<div class="container">
+				<!-- responsive-nav -->
+				<div id="responsive-nav">
+					<!-- NAV -->
+					<ul class="main-nav nav navbar-nav">
+						<li class="active"><a href="/" class="running">Home</a></li>
+						<li class="active"><a href="../insertform/">Insert</a></li>
+						<li class="active"><a href="../view/">View Stock</a></li>
+						<li class="active"><a href="../updateform/">Update Stock</a></li>
+						<li class="active"><a href="../removemodelform/">Remove item</a></li>
+					</ul>
+					<!-- /NAV -->
+				</div>
+				<!-- /responsive-nav -->
+			</div>
+			<!-- /container -->
+		</nav>
+		<!-- /NAVIGATION -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<p>Search Results for {{type |safe}} :{{query|safe}}</p>
+					 <div id="graph" style="width: 1080px%; height: 700px">
+										<script type="text/javascript">
+											Plotly.d3.csv("http://127.0.0.1:8000/searchcsvfile/", function(err, rows){
+
+													  function unpack(rows, key) {
+													  return rows.map(function(row) { return row[key]; });
+													  }
+
+													  var headerNames = Plotly.d3.keys(rows[0]);
+													  //{{names|safe}}
+													  var headerValues = [];
+													  var cellValues = [];
+													  for (i = 0; i < headerNames.length; i++) {
+													    headerValue = [headerNames[i]];
+													    headerValues[i] = headerValue;
+													    cellValue = unpack(rows, headerNames[i]);
+													    cellValues[i] = cellValue;
+													  }
+
+													  // clean date
+													  for (i = 0; i < cellValues[1].length; i++) {
+													  var dateValue = cellValues[1][i].split(' ')[0]
+													  cellValues[1][i] = dateValue
+													  }
+
+
+													var data = [{
+													  type: 'table',
+													  columnwidth: [300,500,600,600,400,400,600,600,600],
+													  columnorder: [0,1,2,3,4,5,6,7,8,9],
+													  header: {
+													    values: headerValues,
+													    align: "center",
+													    line: {width: 1, color: 'rgb(50, 50, 50)'},
+													    fill: {color: ['rgb(153, 0, 0)']},
+													    font: {family: "Arial", size: 11, color: "white"}
+													  },
+													  cells: {
+													    values: cellValues,
+													    align: ["center", "center"],
+													    line: {color: "black", width: 1},
+													    fill: {color: ['rgba(228, 222, 249, 0.65)','rgb(255, 153, 153)', 'rgba(228, 222, 249, 0.65)']},
+													    font: {family: "Arial", size: 10, color: ["black"]}
+													  }
+													}]
+
+													var layout = {
+													  title: ""
+													}
+
+													Plotly.plot('graph', data, layout);
+													});								
+															</script>
+									</div>
+									
+
+
+
+
+
+					<!-- /shop -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- NEWSLETTER -->
+		<div id="newsletter" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /NEWSLETTER -->
+
+		<!-- FOOTER -->
+		<footer id="footer">
+			<!-- top footer -->
+			<div class="section">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						</div>
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+		<!-- jQuery Plugins -->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/slick.min.js"></script>
+		<script src="js/nouislider.min.js"></script>
+		<script src="js/jquery.zoom.min.js"></script>
+		<script src="js/main.js"></script>
+
+	</body>
+</html>
+`
